@@ -84,7 +84,7 @@ runs:
         draft: false
         prerelease: false
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 
     - name: Upload archive
       uses: actions/upload-release-asset@v1.0.1
@@ -94,7 +94,7 @@ runs:
         asset_name: ${{ env.archive_file_name }}
         asset_content_type: application/octet-stream
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
 
     - name: Upload checksum
       uses: actions/upload-release-asset@v1.0.1
@@ -104,4 +104,4 @@ runs:
         asset_name: ${{ env.archive_file_name }}.sha256sum
         asset_content_type: text/plain
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
