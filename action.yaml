@@ -43,9 +43,9 @@ runs:
       shell: bash
       run: |
         cargo install cross
-        echo "CARGO=cross" >> $GITHUB_ENV
-        echo "TARGET_ARGS=--target ${{ inputs.target }}" >> $GITHUB_ENV
-        echo "OUTPUT_DIR=target/${{ inputs.target }}" >> $GITHUB_ENV
+        echo 'CARGO=cross' >> $GITHUB_ENV
+        echo 'TARGET_ARGS=--target ${{ inputs.target }}' >> $GITHUB_ENV
+        echo 'OUTPUT_DIR=target/${{ inputs.target }}' >> $GITHUB_ENV
 
     - name: Set up Rust
       uses: ATiltedTree/setup-rust@v1
@@ -56,7 +56,7 @@ runs:
     - name: Build Rust tool
       shell: bash
       run: |
-        ${{ env.cargo }} build ${{ env.BUILD_TYPE_ARGS }} ${{ env.TARGET_ARGS }}
+        ${{ env.CARGO }} build ${{ env.BUILD_TYPE_ARGS }} ${{ env.TARGET_ARGS }}
 
     - name: Create archive
       shell: bash
@@ -90,8 +90,8 @@ runs:
       uses: actions/upload-release-asset@v1.0.1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ env.archive_file_name }}
-        asset_name: ${{ env.archive_file_name }}
+        asset_path: ${{ env.ARCHIVE_FILE_NAME }}
+        asset_name: ${{ env.ARCHIVE_FILE_NAME }}
         asset_content_type: application/octet-stream
       env:
         GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
@@ -100,8 +100,8 @@ runs:
       uses: actions/upload-release-asset@v1.0.1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ env.archive_file_name }}.sha256sum
-        asset_name: ${{ env.archive_file_name }}.sha256sum
+        asset_path: ${{ env.ARCHIVE_FILE_NAME }}.sha256sum
+        asset_name: ${{ env.ARCHIVE_FILE_NAME }}.sha256sum
         asset_content_type: text/plain
       env:
         GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
