@@ -7,14 +7,6 @@ build_type=$4
 output_dir=$5
 archive_file_name=$6
 
-echo tool_name=$tool_name
-echo executable_ext=$executable_ext
-echo archive_type=$archive_type
-echo build_type=$build_type
-echo output_dir=$output_dir
-echo archive_file_name=$archive_file_name
-exit 0
-
 if [ "$archive_type" == '.tar.gz' ]; then
   tar \
     -C $output_dir/$build_type \
