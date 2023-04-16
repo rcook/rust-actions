@@ -1,0 +1,30 @@
+#!/bin/bash
+set -euo pipefail
+
+#${{ env.output_dir }}
+#${{ env.build_type }}
+#${{ matrix.archive_ext }}
+output_dir=$1
+build_type=$2
+archive_ext=$3
+echo output_dir=$output_dir
+echo build_type=$build_type
+echo archive_ext=$archive_ext
+
+exit 0
+if [ "$archive_ext" == '.tar.gz' ]; then
+  tar \
+    -C $output_dir/$build_type \
+    -czf \
+    ${{ env.archive_file_name }} ${{ env.project }}${{ matrix.executable_ext }}
+elif [ "$archive_ext" == '.zip' ]; then
+  (cd $output_dir/$build_type && 7z \
+    a \
+    -tzip \
+    ${{ env.archive_file_name }} \
+    ${{ env.project }}${{ matrix.executable_ext }})
+  mv $output_dir/$build_type/${{ env.archive_file_name }} .
+else
+  echo "Unsupported archive extension $archive_ext"
+  exit 1
+fi

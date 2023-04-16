@@ -5,13 +5,43 @@ inputs:
     description: 'Who to greet'
     required: true
     default: 'World'
+  host_os:
+    description: Host operating system for build
+    required: true
+  target:
+    description: Target triplet
+    required: true
+  executable_file_name:
+    description: Executable name
+    required: true
+  executable_ext:
+    description: Executable file name extension
+    required: true
 outputs:
   random-number:
     description: "Random number"
     value: ${{ steps.random-number-generator.outputs.random-number }}
+runs-on: ${{ inputs.host_os }}
+env:
+  CARGO: cargo
+  CARGO_TERM_COLOR: always
 runs:
   using: "composite"
   steps:
+    - name: Install Cross
+      shell: bash
+      run: |
+        #cargo install cross
+        echo "CARGO=cross" >> $GITHUB_ENV
+        echo "TARGET_FLAGS=--target ${{ inputs.target }}" >> $GITHUB_ENV
+        echo "OUTPUT_DIR=target/${{ inputs.target }}" >> $GITHUB_ENV
+
+    - name: Set variables
+      shell: bash
+      run: |
+        echo "RUST_TOOL_ACTION_BUILD_VERSION=${{ github.ref_name }}-$(git rev-parse HEAD)" >> $GITHUB_ENV
+        echo "ARCHIVE_FILE_NAME=${{ inputs.executable_file_name }}-${{ github.ref_name }}-${{ input.target }}${{ matrix.archive_ext }}" >> $GITHUB_ENV
+
     - run: echo Hello ${{ inputs.who-to-greet }}.
       shell: bash
     - id: random-number-generator
@@ -22,3 +52,44 @@ runs:
     - name: Probe
       shell: bash
       run: probe one two three
+
+#      - name: Create archive
+#        shell: bash
+#        run: create-archive
+
+#      - name: Generate checksum
+#        shell: bash
+#        run: |
+#          ${{ matrix.sha256sum }} ${{ env.archive_file_name }} > ${{ env.archive_file_name }}.sha256sum
+
+#      - name: Create release
+#        id: create_release
+#        uses: joutvhu/create-release@v1
+#        with:
+#          tag_name: ${{ github.ref_name }}
+#          name: Release ${{ github.ref_name }}
+#          body: ${{ env.project }} release ${{ github.ref_name }}
+#          draft: false
+#          prerelease: false
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#      - name: Upload archive
+#        uses: actions/upload-release-asset@v1.0.1
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: ${{ env.archive_file_name }}
+#          asset_name: ${{ env.archive_file_name }}
+#          asset_content_type: application/octet-stream
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#      - name: Upload checksum
+#        uses: actions/upload-release-asset@v1.0.1
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: ${{ env.archive_file_name }}.sha256sum
+#          asset_name: ${{ env.archive_file_name }}.sha256sum
+#          asset_content_type: text/plain
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
