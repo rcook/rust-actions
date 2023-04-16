@@ -58,12 +58,12 @@ runs:
 
     - name: Probe
       shell: bash
-      run: \
+      run: |
         probe one two three
 
     - name: Create archive
       shell: bash
-      run: \
+      run: |
         create-archive \
           ${{ env.OUTPUT_DIR }} \
           ${{ inputs.build_type }} \
