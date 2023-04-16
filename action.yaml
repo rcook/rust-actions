@@ -47,8 +47,8 @@ runs:
     - name: Generate random number
       id: random_number_generator
       shell: bash
-      run: \
-        echo "random-number=$(echo $RANDOM)" >> $GITHUB_OUTPUT
+      run: |
+        echo "random_number=$(echo $RANDOM)" >> $GITHUB_OUTPUT
 
     - name: Set action path
       shell: bash
