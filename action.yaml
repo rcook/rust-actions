@@ -67,7 +67,7 @@ runs:
       run: |
         create-archive \
           ${{ inputs.tool_name }} \
-          ${{ inputs.executable_ext }}
+          ${{ inputs.executable_ext }} \
           ${{ inputs.archive_type }} \
           ${{ inputs.build_type }} \
           ${{ env.OUTPUT_DIR }} \
