@@ -55,12 +55,13 @@ jobs:
 
       - name: Release Rust Tool
         id: release_rust_tool
-        uses: rcook/rust-tool-action@v0.0.17
+        uses: rcook/rust-tool-action@v0.0.19
         with:
-          tool_name: rust-ci
+          tool_name: ${{ env.tool_name }}
           target: ${{ matrix.target }}
           executable_ext: ${{ matrix.executable_ext }}
           archive_type: ${{ matrix.archive_type }}
+          build_type: ${{ env.build_type }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
