@@ -1,3 +1,3 @@
 # Rust Tool Action
 
-* Build and package simple command-line tools build with Rust and Cargo
+* Build and package simple command-line tools built with Rust and Cargo
