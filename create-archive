@@ -1,32 +1,33 @@
 #!/bin/bash
 set -euo pipefail
-output_dir=$1
-build_type=$2
-archive_file_name=$3
-archive_ext=$4
-executable_base_name=$5
-executable_ext=$6
-echo output_dir=$output_dir
-echo build_type=$build_type
-echo archive_file_name=$archive_file_name
-echo archive_ext=$archive_ext
-echo executable_base_name=$executable_base_name
+tool_name=$1
+executable_ext=$2
+archive_type=$3
+build_type=$4
+output_dir=$5
+archive_file_name=$6
+
+echo tool_name=$tool_name
 echo executable_ext=$executable_ext
+echo archive_type=$archive_type
+echo build_type=$build_type
+echo output_dir=$output_dir
+echo archive_file_name=$archive_file_name
 
 exit 0
-if [ "$archive_ext" == '.tar.gz' ]; then
+if [ "$archive_type" == '.tar.gz' ]; then
   tar \
     -C $output_dir/$build_type \
     -czf \
-    $archive_file_name $executable_base_name$executable_ext
-elif [ "$archive_ext" == '.zip' ]; then
+    $archive_file_name $tool_name$executable_ext
+elif [ "$archive_type" == '.zip' ]; then
   (cd $output_dir/$build_type && 7z \
     a \
     -tzip \
     $archive_file_name \
-    $executable_base_name$executable_ext)
+    $tool_name$executable_ext)
   mv $output_dir/$build_type/$archive_file_name .
 else
-  echo "Unsupported archive extension $archive_ext"
+  echo "Unsupported archive type $archive_type"
   exit 1
 fi

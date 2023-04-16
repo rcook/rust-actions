@@ -1,19 +1,22 @@
 name: Release Rust Tool
 description: Build and release a Rust tool
 inputs:
-  build_type:
-    description: Build type
+  tool_name:
+    description: Tool name
     required: true
-    default: release
   target:
     description: Target triplet
-    required: true
-  executable_base_name:
-    description: Executable name
     required: true
   executable_ext:
     description: Executable file name extension
     required: true
+  archive_type:
+    description: Archive type
+    required: true
+  build_type:
+    description: Build type
+    required: true
+    default: release
 outputs:
   random_number:
     description: Random number
@@ -21,11 +24,15 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Set variables
+    - name: Set up environment
       shell: bash
       run: |
+        # Path
+        echo "${{ github.action_path }}" >> $GITHUB_PATH
+
+        # Variables
         echo "RUST_TOOL_ACTION_BUILD_VERSION=${{ github.ref_name }}-$(git rev-parse HEAD)" >> $GITHUB_ENV
-        echo 'ARCHIVE_FILE_NAME=${{ inputs.executable_base_name }}-${{ github.ref_name }}-${{ inputs.target }}${{ matrix.archive_ext }}' >> $GITHUB_ENV
+        echo 'ARCHIVE_FILE_NAME=${{ inputs.tool_name }}-${{ github.ref_name }}-${{ inputs.target }}${{ inputs.archive_type }}' >> $GITHUB_ENV
         echo 'CARGO_TERM_COLOR=always' >> $GITHUB_ENV
         echo 'CARGO=cargo' >> $GITHUB_ENV
         echo 'TARGET_ARGS=' >> $GITHUB_ENV
@@ -44,38 +51,32 @@ runs:
         echo "TARGET_ARGS=--target ${{ inputs.target }}" >> $GITHUB_ENV
         echo "OUTPUT_DIR=target/${{ inputs.target }}" >> $GITHUB_ENV
 
+    - name: Probe
+      shell: bash
+      run: |
+        probe one two three
+
     - name: Generate random number
       id: random_number_generator
       shell: bash
       run: |
         echo "random_number=$(echo $RANDOM)" >> $GITHUB_OUTPUT
 
-    - name: Set action path
-      shell: bash
-      run: |
-        echo "github_action_path=${{ github.action_path }}"
-        echo "${{ github.action_path }}" >> $GITHUB_PATH
-
-    - name: Probe
-      shell: bash
-      run: |
-        probe one two three
-
     - name: Create archive
       shell: bash
       run: |
         create-archive \
-          ${{ env.OUTPUT_DIR }} \
-          ${{ inputs.build_type }} \
-          ${{ env.ARCHIVE_FILE_NAME }} \
-          ${{ inputs.archive_ext }} \
-          ${{ inputs.executable_base_name }} \
+          ${{ inputs.tool_name }} \
           ${{ inputs.executable_ext }}
+          ${{ inputs.archive_type }} \
+          ${{ inputs.build_type }} \
+          ${{ env.OUTPUT_DIR }} \
+          ${{ env.ARCHIVE_FILE_NAME }} \
 
-#      - name: Generate checksum
-#        shell: bash
-#        run: |
-#          ${{ matrix.sha256sum }} ${{ env.archive_file_name }} > ${{ env.archive_file_name }}.sha256sum
+    - name: Create checksum
+      shell: bash
+      run: |
+        create-checksum ${{ env.ARCHIVE_FILE_NAME }}
 
 #      - name: Create release
 #        id: create_release
