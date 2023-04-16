@@ -8,7 +8,7 @@ inputs:
   target:
     description: Target triplet
     required: true
-  executable_file_name:
+  executable_base_name:
     description: Executable name
     required: true
   executable_ext:
@@ -24,8 +24,8 @@ runs:
     - name: Set variables
       shell: bash
       run: |
-        echo 'RUST_TOOL_ACTION_BUILD_VERSION=${{ github.ref_name }}-$(git rev-parse HEAD)' >> $GITHUB_ENV
-        echo 'ARCHIVE_FILE_NAME=${{ inputs.executable_file_name }}-${{ github.ref_name }}-${{ inputs.target }}${{ matrix.archive_ext }}' >> $GITHUB_ENV
+        echo "RUST_TOOL_ACTION_BUILD_VERSION=${{ github.ref_name }}-$(git rev-parse HEAD)" >> $GITHUB_ENV
+        echo 'ARCHIVE_FILE_NAME=${{ inputs.executable_base_name }}-${{ github.ref_name }}-${{ inputs.target }}${{ matrix.archive_ext }}' >> $GITHUB_ENV
         echo 'CARGO_TERM_COLOR=always' >> $GITHUB_ENV
         echo 'CARGO=cargo' >> $GITHUB_ENV
         echo 'TARGET_ARGS=' >> $GITHUB_ENV
@@ -40,9 +40,9 @@ runs:
       shell: bash
       run: |
         #cargo install cross
-        #echo "CARGO=cross" >> $GITHUB_ENV
-        #echo "TARGET_ARGS=--target ${{ inputs.target }}" >> $GITHUB_ENV
-        #echo "OUTPUT_DIR=target/${{ inputs.target }}" >> $GITHUB_ENV
+        echo "CARGO=cross" >> $GITHUB_ENV
+        echo "TARGET_ARGS=--target ${{ inputs.target }}" >> $GITHUB_ENV
+        echo "OUTPUT_DIR=target/${{ inputs.target }}" >> $GITHUB_ENV
 
     - name: Generate random number
       id: random_number_generator
@@ -58,11 +58,19 @@ runs:
 
     - name: Probe
       shell: bash
-      run: probe one two three
+      run: \
+        probe one two three
 
-#      - name: Create archive
-#        shell: bash
-#        run: create-archive
+    - name: Create archive
+      shell: bash
+      run: \
+        create-archive \
+          ${{ env.OUTPUT_DIR }} \
+          ${{ inputs.build_type }} \
+          ${{ env.ARCHIVE_FILE_NAME }} \
+          ${{ inputs.archive_ext }} \
+          ${{ inputs.executable_base_name }} \
+          ${{ inputs.executable_ext }}
 
 #      - name: Generate checksum
 #        shell: bash
