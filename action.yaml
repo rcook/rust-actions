@@ -47,11 +47,6 @@ runs:
         echo "TARGET_ARGS=--target ${{ inputs.target }}" >> $GITHUB_ENV
         echo "OUTPUT_DIR=target/${{ inputs.target }}" >> $GITHUB_ENV
 
-    - name: Probe
-      shell: bash
-      run: |
-        probe one two three
-
     - name: Create archive
       shell: bash
       run: |
