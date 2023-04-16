@@ -1,10 +1,10 @@
-name: 'Hello World'
-description: 'Greet someone'
+name: Hello World
+description: Greet someone
 inputs:
   who-to-greet:  # id of input
-    description: 'Who to greet'
+    description: Who to greet
     required: true
-    default: 'World'
+    default: World
   target:
     description: Target triplet
     required: true
@@ -36,7 +36,7 @@ runs:
       shell: bash
       run: |
         echo "RUST_TOOL_ACTION_BUILD_VERSION=${{ github.ref_name }}-$(git rev-parse HEAD)" >> $GITHUB_ENV
-        echo "ARCHIVE_FILE_NAME=${{ inputs.executable_file_name }}-${{ github.ref_name }}-${{ input.target }}${{ matrix.archive_ext }}" >> $GITHUB_ENV
+        echo "ARCHIVE_FILE_NAME=${{ inputs.executable_file_name }}-${{ github.ref_name }}-${{ inputs.target }}${{ matrix.archive_ext }}" >> $GITHUB_ENV
 
     - run: echo Hello ${{ inputs.who-to-greet }}.
       shell: bash
