@@ -1,10 +1,10 @@
-name: Hello World
-description: Greet someone
+name: Release Rust Tool
+description: Build and release a Rust tool
 inputs:
-  who-to-greet:  # id of input
-    description: Who to greet
+  build_type:
+    description: Build type
     required: true
-    default: World
+    default: release
   target:
     description: Target triplet
     required: true
@@ -15,36 +15,47 @@ inputs:
     description: Executable file name extension
     required: true
 outputs:
-  random-number:
+  random_number:
     description: Random number
-    value: ${{ steps.random-number-generator.outputs.random-number }}
+    value: ${{ steps.random_number_generator.outputs.random_number }}
 runs:
   using: composite
   steps:
     - name: Set variables
       shell: bash
       run: |
-        echo "RUST_TOOL_ACTION_BUILD_VERSION=${{ github.ref_name }}-$(git rev-parse HEAD)" >> $GITHUB_ENV
-        echo "ARCHIVE_FILE_NAME=${{ inputs.executable_file_name }}-${{ github.ref_name }}-${{ inputs.target }}${{ matrix.archive_ext }}" >> $GITHUB_ENV
-        echo "CARGO=cargo" >> $GITHUB_ENV
-        echo "CARGO_TERM_COLOR=always" >> $GITHUB_ENV
+        echo 'RUST_TOOL_ACTION_BUILD_VERSION=${{ github.ref_name }}-$(git rev-parse HEAD)' >> $GITHUB_ENV
+        echo 'ARCHIVE_FILE_NAME=${{ inputs.executable_file_name }}-${{ github.ref_name }}-${{ inputs.target }}${{ matrix.archive_ext }}' >> $GITHUB_ENV
+        echo 'CARGO_TERM_COLOR=always' >> $GITHUB_ENV
+        echo 'CARGO=cargo' >> $GITHUB_ENV
+        echo 'TARGET_ARGS=' >> $GITHUB_ENV
+        echo 'OUTPUT_DIR=target' >> $GITHUB_ENV
+        if [ '${{ inputs.build_type }}' == 'release' ]; then
+          echo 'BUILD_TYPE_ARGS=--release' >> $GITHUB_ENV
+        else
+          echo 'BUILD_TYPE_ARGS=' >> $GITHUB_ENV
+        fi
 
     - name: Install Cross
       shell: bash
       run: |
         #cargo install cross
-        echo "CARGO=cross" >> $GITHUB_ENV
-        echo "TARGET_FLAGS=--target ${{ inputs.target }}" >> $GITHUB_ENV
-        echo "OUTPUT_DIR=target/${{ inputs.target }}" >> $GITHUB_ENV
+        #echo "CARGO=cross" >> $GITHUB_ENV
+        #echo "TARGET_ARGS=--target ${{ inputs.target }}" >> $GITHUB_ENV
+        #echo "OUTPUT_DIR=target/${{ inputs.target }}" >> $GITHUB_ENV
 
+    - name: Generate random number
+      id: random_number_generator
+      shell: bash
+      run: \
+        echo "random-number=$(echo $RANDOM)" >> $GITHUB_OUTPUT
 
-    - run: echo Hello ${{ inputs.who-to-greet }}.
+    - name: Set action path
       shell: bash
-    - id: random-number-generator
-      run: echo "random-number=$(echo $RANDOM)" >> $GITHUB_OUTPUT
-      shell: bash
-    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
-      shell: bash
+      run: |
+        echo "github_action_path=${{ github.action_path }}"
+        echo "${{ github.action_path }}" >> $GITHUB_PATH
+
     - name: Probe
       shell: bash
       run: probe one two three
