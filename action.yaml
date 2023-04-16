@@ -74,34 +74,34 @@ runs:
       run: |
         create-checksum ${{ env.ARCHIVE_FILE_NAME }}
 
-#      - name: Create release
-#        id: create_release
-#        uses: joutvhu/create-release@v1
-#        with:
-#          tag_name: ${{ github.ref_name }}
-#          name: Release ${{ github.ref_name }}
-#          body: ${{ inputs.tool_name }} release ${{ github.ref_name }}
-#          draft: false
-#          prerelease: false
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create release
+      id: create_release
+      uses: joutvhu/create-release@v1
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
+        body: ${{ inputs.tool_name }} release ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-#      - name: Upload archive
-#        uses: actions/upload-release-asset@v1.0.1
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: ${{ env.archive_file_name }}
-#          asset_name: ${{ env.archive_file_name }}
-#          asset_content_type: application/octet-stream
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload archive
+      uses: actions/upload-release-asset@v1.0.1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.archive_file_name }}
+        asset_name: ${{ env.archive_file_name }}
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-#      - name: Upload checksum
-#        uses: actions/upload-release-asset@v1.0.1
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: ${{ env.archive_file_name }}.sha256sum
-#          asset_name: ${{ env.archive_file_name }}.sha256sum
-#          asset_content_type: text/plain
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload checksum
+      uses: actions/upload-release-asset@v1.0.1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.archive_file_name }}.sha256sum
+        asset_name: ${{ env.archive_file_name }}.sha256sum
+        asset_content_type: text/plain
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
