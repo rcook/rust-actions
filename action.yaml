@@ -62,17 +62,17 @@ runs:
       shell: bash
       run: |
         create-archive \
-          ${{ inputs.tool_name }} \
-          ${{ inputs.executable_ext }} \
-          ${{ inputs.archive_type }} \
-          ${{ inputs.build_type }} \
-          ${{ env.OUTPUT_DIR }} \
-          ${{ env.ARCHIVE_FILE_NAME }} \
+          '${{ inputs.tool_name }}' \
+          '${{ inputs.executable_ext }}' \
+          '${{ inputs.archive_type }}' \
+          '${{ inputs.build_type }}' \
+          '${{ env.OUTPUT_DIR }}' \
+          '${{ env.ARCHIVE_FILE_NAME }}' \
 
     - name: Create checksum
       shell: bash
       run: |
-        create-checksum ${{ env.ARCHIVE_FILE_NAME }}
+        create-checksum '${{ env.ARCHIVE_FILE_NAME }}'
 
     - name: Create release
       id: create_release
