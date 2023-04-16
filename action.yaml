@@ -21,4 +21,4 @@ runs:
       shell: bash
     - name: Probe
       shell: bash
-      run: ./probe one two three
+      run: probe one two three
