@@ -5,9 +5,6 @@ inputs:
     description: 'Who to greet'
     required: true
     default: 'World'
-  host_os:
-    description: Host operating system for build
-    required: true
   target:
     description: Target triplet
     required: true
@@ -19,14 +16,13 @@ inputs:
     required: true
 outputs:
   random-number:
-    description: "Random number"
+    description: Random number
     value: ${{ steps.random-number-generator.outputs.random-number }}
-runs-on: ${{ inputs.host_os }}
 env:
   CARGO: cargo
   CARGO_TERM_COLOR: always
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Install Cross
       shell: bash
