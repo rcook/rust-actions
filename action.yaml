@@ -17,10 +17,6 @@ inputs:
     description: Build type
     required: true
     default: release
-outputs:
-  random_number:
-    description: Random number
-    value: ${{ steps.random_number_generator.outputs.random_number }}
 runs:
   using: composite
   steps:
@@ -55,12 +51,6 @@ runs:
       shell: bash
       run: |
         probe one two three
-
-    - name: Generate random number
-      id: random_number_generator
-      shell: bash
-      run: |
-        echo "random_number=$(echo $RANDOM)" >> $GITHUB_OUTPUT
 
     - name: Create archive
       shell: bash
