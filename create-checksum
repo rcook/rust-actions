@@ -1,8 +1,9 @@
 #!/bin/bash
 set -euo pipefail
-archive_file_name=$6
+archive_file_name=$1
 
 echo archive_file_name=$archive_file_name
+exit 0
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
   sha256sum=shasum -a 256
