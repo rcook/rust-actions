@@ -70,6 +70,7 @@ runs:
 
     - name: Code-sign executable
       if: ${{ inputs.code_sign }}
+      shell: bash
       run: |
           python3 '${{ github.action_path }}/sign.py' sign ${{ env.OUTPUT_DIR }}/${{ inputs.build_type }}/${{ inputs.tool_name }}${{ inputs.executable_ext }}
       env:
