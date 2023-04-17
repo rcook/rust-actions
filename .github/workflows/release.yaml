@@ -33,24 +33,3 @@ jobs:
           archive_type: ${{ matrix.archive_type }}
           build_type: ${{ env.build_type }}
           code_sign: true
-
-      - name: Pass false
-        id: release_rust_tool
-        uses: rcook/rust-tool-action@rcook-experimental
-        with:
-          tool_name: ${{ env.tool_name }}
-          target: ${{ matrix.target }}
-          executable_ext: ${{ matrix.executable_ext }}
-          archive_type: ${{ matrix.archive_type }}
-          build_type: ${{ env.build_type }}
-          code_sign: false
-
-      - name: Pass nothing
-        id: release_rust_tool
-        uses: rcook/rust-tool-action@rcook-experimental
-        with:
-          tool_name: ${{ env.tool_name }}
-          target: ${{ matrix.target }}
-          executable_ext: ${{ matrix.executable_ext }}
-          archive_type: ${{ matrix.archive_type }}
-          build_type: ${{ env.build_type }}
