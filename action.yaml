@@ -31,13 +31,13 @@ runs:
   using: composite
   steps:
     - name: Code-sign executable
-      if: ${{ inputs.code_sign == "true" }}
+      if: ${{ inputs.code_sign == 'true' }}
       shell: bash
       run: |
         echo CODE_SIGN_IS_TRUTHY
 
     - name: Code-sign executable
-      if: ${{ inputs.code_sign != "true" }}
+      if: ${{ inputs.code_sign != 'true' }}
       shell: bash
       run: |
         echo CODE_SIGN_IS_FALSY
