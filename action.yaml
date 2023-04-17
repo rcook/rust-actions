@@ -69,10 +69,10 @@ runs:
         ${{ env.CARGO }} build ${{ env.BUILD_TYPE_ARGS }} ${{ env.TARGET_ARGS }}
 
     - name: Code-sign executable
-      if: ${{ inputs.code_sign }}
+      if: ${{ inputs.code_sign == 'true' }}
       shell: bash
       run: |
-          python3 '${{ github.action_path }}/sign.py' sign ${{ env.OUTPUT_DIR }}/${{ inputs.build_type }}/${{ inputs.tool_name }}${{ inputs.executable_ext }}
+        python3 '${{ github.action_path }}/sign.py' sign ${{ env.OUTPUT_DIR }}/${{ inputs.build_type }}/${{ inputs.tool_name }}${{ inputs.executable_ext }}
       env:
         RUST_TOOL_ACTION_CODE_SIGN_CRT: ${{ env.RUST_TOOL_ACTION_CODE_SIGN_CRT }}
         RUST_TOOL_ACTION_CODE_SIGN_CRTPASS: ${{ env.RUST_TOOL_ACTION_CODE_SIGN_CRTPASS }}
