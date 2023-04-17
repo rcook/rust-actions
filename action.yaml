@@ -30,97 +30,14 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Set up environment
-      shell: bash
-      run: |
-        # Path
-        echo "${{ github.action_path }}" >> $GITHUB_PATH
-
-        # Variables
-        echo "RUST_TOOL_ACTION_BUILD_VERSION=${{ github.ref_name }}-$(git rev-parse HEAD)" >> $GITHUB_ENV
-        echo 'ARCHIVE_FILE_NAME=${{ inputs.tool_name }}-${{ github.ref_name }}-${{ inputs.target }}${{ inputs.archive_type }}' >> $GITHUB_ENV
-        echo 'CARGO_TERM_COLOR=always' >> $GITHUB_ENV
-        echo 'CARGO=cargo' >> $GITHUB_ENV
-        echo 'TARGET_ARGS=' >> $GITHUB_ENV
-        echo 'OUTPUT_DIR=target' >> $GITHUB_ENV
-        if [ '${{ inputs.build_type }}' == 'release' ]; then
-          echo 'BUILD_TYPE_ARGS=--release' >> $GITHUB_ENV
-        else
-          echo 'BUILD_TYPE_ARGS=' >> $GITHUB_ENV
-        fi
-
-    - name: Install Cross
-      shell: bash
-      run: |
-        cargo install cross
-        echo 'CARGO=cross' >> $GITHUB_ENV
-        echo 'TARGET_ARGS=--target ${{ inputs.target }}' >> $GITHUB_ENV
-        echo 'OUTPUT_DIR=target/${{ inputs.target }}' >> $GITHUB_ENV
-
-    - name: Set up Rust
-      uses: ATiltedTree/setup-rust@v1
-      with:
-        rust-version: stable
-        targets: ${{ inputs.target }}
-
-    - name: Build Rust tool
-      shell: bash
-      run: |
-        ${{ env.CARGO }} build ${{ env.BUILD_TYPE_ARGS }} ${{ env.TARGET_ARGS }}
-
     - name: Code-sign executable
       if: ${{ inputs.code_sign }}
       shell: bash
       run: |
-          python3 '${{ github.action_path }}/sign.py' sign ${{ env.OUTPUT_DIR }}/${{ inputs.build_type }}/${{ inputs.tool_name }}${{ inputs.executable_ext }}
-      env:
-        RUST_TOOL_ACTION_CODE_SIGN_CRT: ${{ env.RUST_TOOL_ACTION_CODE_SIGN_CRT }}
-        RUST_TOOL_ACTION_CODE_SIGN_CRTPASS: ${{ env.RUST_TOOL_ACTION_CODE_SIGN_CRTPASS }}
+        echo CODE_SIGN_IS_TRUTHY
 
-    - name: Create archive
+    - name: Code-sign executable
+      if: ${{ !inputs.code_sign }}
       shell: bash
       run: |
-        create-archive \
-          '${{ inputs.tool_name }}' \
-          '${{ inputs.executable_ext }}' \
-          '${{ inputs.archive_type }}' \
-          '${{ inputs.build_type }}' \
-          '${{ env.OUTPUT_DIR }}' \
-          '${{ env.ARCHIVE_FILE_NAME }}' \
-
-    - name: Create checksum
-      shell: bash
-      run: |
-        create-checksum '${{ env.ARCHIVE_FILE_NAME }}'
-
-    - name: Create release
-      id: create_release
-      uses: joutvhu/create-release@v1
-      with:
-        tag_name: ${{ github.ref_name }}
-        name: Release ${{ github.ref_name }}
-        body: ${{ inputs.tool_name }} release ${{ github.ref_name }}
-        draft: false
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-
-    - name: Upload archive
-      uses: actions/upload-release-asset@v1.0.1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ env.ARCHIVE_FILE_NAME }}
-        asset_name: ${{ env.ARCHIVE_FILE_NAME }}
-        asset_content_type: application/octet-stream
-      env:
-        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
-
-    - name: Upload checksum
-      uses: actions/upload-release-asset@v1.0.1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ env.ARCHIVE_FILE_NAME }}.sha256sum
-        asset_name: ${{ env.ARCHIVE_FILE_NAME }}.sha256sum
-        asset_content_type: text/plain
-      env:
-        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+        echo CODE_SIGN_IS_FALSY

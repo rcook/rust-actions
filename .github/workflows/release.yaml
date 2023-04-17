@@ -1,0 +1,56 @@
+name: Release
+
+env:
+  tool_name: isopy
+  build_type: release
+
+on:
+  push:
+    branches:
+      - rcook-experimental
+
+jobs:
+  release:
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-musl
+        include:
+          - target: x86_64-unknown-linux-musl
+            executable_ext:
+            archive_type: .tar.gz
+            build_os: ubuntu-latest
+    runs-on: ${{ matrix.build_os }}
+    name: Release Rust Tool
+    steps:
+      - name: Pass true
+        id: release_rust_tool
+        uses: rcook/rust-tool-action@rcook-experimental
+        with:
+          tool_name: ${{ env.tool_name }}
+          target: ${{ matrix.target }}
+          executable_ext: ${{ matrix.executable_ext }}
+          archive_type: ${{ matrix.archive_type }}
+          build_type: ${{ env.build_type }}
+          code_sign: true
+
+      - name: Pass false
+        id: release_rust_tool
+        uses: rcook/rust-tool-action@rcook-experimental
+        with:
+          tool_name: ${{ env.tool_name }}
+          target: ${{ matrix.target }}
+          executable_ext: ${{ matrix.executable_ext }}
+          archive_type: ${{ matrix.archive_type }}
+          build_type: ${{ env.build_type }}
+          code_sign: false
+
+      - name: Pass nothing
+        id: release_rust_tool
+        uses: rcook/rust-tool-action@rcook-experimental
+        with:
+          tool_name: ${{ env.tool_name }}
+          target: ${{ matrix.target }}
+          executable_ext: ${{ matrix.executable_ext }}
+          archive_type: ${{ matrix.archive_type }}
+          build_type: ${{ env.build_type }}
