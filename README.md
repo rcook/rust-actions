@@ -68,3 +68,40 @@ jobs:
           RUST_TOOL_ACTION_CODE_SIGN_CRT: ${{ secrets.CRT }}
           RUST_TOOL_ACTION_CODE_SIGN_CRTPASS: ${{ secrets.CRTPASS }}
 ```
+
+## Code-signing script
+
+Install [isopy][isopy] and set up a development environment as follows:
+
+```pwsh
+isopy init
+isopy shell
+```
+
+`$` below refers to the child shell open above.
+
+### Show information
+
+```pwsh
+$ python .\sign.py info one two three
+```
+
+### Generate certificate
+
+```pwsh
+$ python .\sign.py cert --force cert.crt
+```
+
+### Sign executable
+
+```pwsh
+$ python .\sign.py sign cert.crt tool.exe
+```
+
+### Verify executable
+
+```pwsh
+$ python .\sign.py verify tool.exe
+```
+
+[isopy]: http://rcook.github.io/isopy
