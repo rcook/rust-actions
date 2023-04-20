@@ -30,6 +30,9 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Check out
+      uses: actions/checkout@v3
+
     - name: Set up environment
       shell: bash
       run: |
