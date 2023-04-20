@@ -1,5 +1,5 @@
-name: Release Rust Tool
-description: Build and release a Rust tool
+name: Rust tool
+description: Build, test and release a Rust tool
 inputs:
   tool_name:
     description: Tool name
