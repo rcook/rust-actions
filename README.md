@@ -32,19 +32,23 @@ jobs:
           - x86_64-unknown-linux-musl
         include:
           - target: aarch64-apple-darwin
-            executable_ext:
+            target_prefix:
+            target_ext:
             archive_type: .tar.gz
             build_os: macos-latest
           - target: x86_64-apple-darwin
-            executable_ext:
+            target_prefix:
+            target_ext:
             archive_type: .tar.gz
             build_os: macos-latest
           - target: x86_64-pc-windows-msvc
-            executable_ext: .exe
+            target_prefix:
+            target_ext: .exe
             archive_type: .zip
             build_os: windows-latest
           - target: x86_64-unknown-linux-musl
-            executable_ext:
+            target_prefix:
+            target_ext:
             archive_type: .tar.gz
             build_os: ubuntu-latest
     runs-on: ${{ matrix.build_os }}
@@ -59,7 +63,8 @@ jobs:
         with:
           tool_name: ${{ env.tool_name }}
           target: ${{ matrix.target }}
-          executable_ext: ${{ matrix.executable_ext }}
+          target_prefix: ${{ matrix.target_prefix }}
+          target_ext: ${{ matrix.target_ext }}
           archive_type: ${{ matrix.archive_type }}
           build_type: ${{ env.build_type }}
           code_sign: true
