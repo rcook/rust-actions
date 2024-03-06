@@ -12,7 +12,7 @@ archive_file_name=$8
 if [ "$rename_target" == '' ]; then
   input_file_name=$target_prefix$tool_name$target_ext
 else
-  mv $target_prefix$tool_name$target_ext $rename_target
+  mv $output_dir/$build_type/$target_prefix$tool_name$target_ext $output_dir/$build_type/$rename_target
   input_file_name=$rename_target
 fi
 
