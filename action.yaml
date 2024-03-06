@@ -98,6 +98,7 @@ runs:
           '${{ inputs.tool_name }}' \
           '${{ inputs.target_prefix }}' \
           '${{ inputs.target_ext }}' \
+          '${{ inputs.rename_target }}' \
           '${{ inputs.archive_type }}' \
           '${{ inputs.build_type }}' \
           '${{ env.OUTPUT_DIR }}' \
