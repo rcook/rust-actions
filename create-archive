@@ -3,22 +3,30 @@ set -euo pipefail
 tool_name=$1
 target_prefix=$2
 target_ext=$3
-archive_type=$4
-build_type=$5
-output_dir=$6
-archive_file_name=$7
+rename_target=$4
+archive_type=$5
+build_type=$6
+output_dir=$7
+archive_file_name=$8
+
+if [ "$rename_target" == '' ]; then
+  input_file_name=$target_prefix$tool_name$target_ext
+else
+  mv $target_prefix$tool_name$target_ext $rename_target
+  input_file_name=$rename_target
+fi
 
 if [ "$archive_type" == '.tar.gz' ]; then
   tar \
     -C $output_dir/$build_type \
     -czf \
-    $archive_file_name $target_prefix$tool_name$target_ext
+    $archive_file_name $input_file_name
 elif [ "$archive_type" == '.zip' ]; then
   (cd $output_dir/$build_type && 7z \
     a \
     -tzip \
     $archive_file_name \
-    $target_prefix$tool_name$target_ext)
+    $input_file_name)
   mv $output_dir/$build_type/$archive_file_name .
 else
   echo "Unsupported archive type $archive_type"

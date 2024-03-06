@@ -17,6 +17,11 @@ inputs:
     description: Target file name extension
     type: string
     required: true
+  rename_target:
+    description: Optional new name for target file
+    type: string
+    required: false
+    default:
   archive_type:
     description: Archive type
     type: string
