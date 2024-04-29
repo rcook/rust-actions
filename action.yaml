@@ -72,7 +72,7 @@ runs:
         echo 'OUTPUT_DIR=target/${{ inputs.target }}' >> $GITHUB_ENV
 
     - name: Set up Rust
-      uses: ATiltedTree/setup-rust@v1
+      uses: rcook/rust-setup-action@v1
       with:
         rust-version: stable
         targets: ${{ inputs.target }}
